@@ -25,8 +25,7 @@
                   :auto-expand-parent="autoExpandParent"
                   :tree-data="treeData"
                   v-bind="$attrs"
-                  :checkedKeys="value"
-                  @check="handleTreeNodeCheck"
+                  v-model="checkedKeys"
                   @expand="onExpand">
             <template slot="title" slot-scope="{ title }">
               <div v-if="title.includes(searchValue)" class="flex">
@@ -42,7 +41,11 @@
         <a-divider type="vertical" style="height:200px;margin:auto 10px;"/>
 
         <a-card :body-style="{width:'200px'}" size="small">
-          test2
+          <template v-for="({title,key},index) in getAllTags">
+            <a-tag closable @close="onTagClose(key)" :key="index">
+              {{ title || '' }}
+            </a-tag>
+          </template>
         </a-card>
       </div>
 
@@ -57,7 +60,7 @@
 <script lang="ts">
 
 import {
-  Component, Emit, Model, Prop, Vue,
+  Component, Emit, Model, Prop, Vue, Watch,
 } from 'vue-property-decorator';
 
 export interface TreeNode {
@@ -70,7 +73,7 @@ export interface TreeNode {
 export default class MultipleChoiceBox extends Vue {
   @Model('check', { type: Array, default: () => ([]) }) value: string[] | number[] | undefined;
 
-  checkedKeys: any[] = this.value || [];
+  checkedKeys: any[] = [];
 
   isOpen = false;
 
@@ -81,7 +84,9 @@ export default class MultipleChoiceBox extends Vue {
   autoExpandParent = true;
 
   // 所有的叶子结点
-  allLeaves: any[] = [];
+  allLeaves: { key: string; title: string }[] = [];
+
+  treeNodeList: { key: string; title: string }[] = [];
 
   treeData: any[] = [
     {
@@ -92,9 +97,8 @@ export default class MultipleChoiceBox extends Vue {
         {
           title: '张晨成',
           key: '0-0-0',
-          disabled: true,
           children: [
-            { title: 'leaf', key: '0-0-0-0', disableCheckbox: true },
+            { title: 'leaf', key: '0-0-0-0' },
             { title: 'leaf', key: '0-0-0-1' },
           ],
           scopedSlots: { title: 'title' },
@@ -108,12 +112,17 @@ export default class MultipleChoiceBox extends Vue {
         {
           title: 'parent 1-2',
           key: '0-0-2',
-          children: [{ key: '0-0-2-0', title: 'zcvc111' }],
+          children: [{ key: '0-0-2-0', title: 'zcvc111' }, { key: '0-0-2-1', title: 'zcvc221' }],
           scopedSlots: { title: 'title' },
         },
       ],
     },
   ];
+
+  get getAllTags() {
+    const checkedKeys = this.checkedKeys || [];
+    return this.allLeaves.filter(({ key }) => checkedKeys.includes(key));
+  }
 
   // 展开事件
   onExpand(expandedKeys: never[]) {
@@ -137,8 +146,8 @@ export default class MultipleChoiceBox extends Vue {
   }
 
   // 获取parentKey
-  getParentKey(key: string, treeNodes: TreeNode[]) {
-    let parentKey;
+  getParentKey(key: string | number, treeNodes: TreeNode[]) {
+    let parentKey: string | number = '';
     treeNodes.forEach((node) => {
       if (node.children) {
         if (node.children.some((item) => item.key === key)) {
@@ -153,11 +162,8 @@ export default class MultipleChoiceBox extends Vue {
   }
 
   // 关键字搜索
-  onSearch({ target: { value } }: any) {
-    const treeNodes = [...this.treeData];
-    const { dataList, allLeaves } = this.generateList(treeNodes);
-    this.allLeaves = allLeaves;
-    const expandedKeys = dataList.map((item) => {
+  onSearch({ target: { value } }: any, treeNodes = this.treeData || []) {
+    const expandedKeys = this.treeNodeList?.map((item) => {
       if (item.title?.includes(value)) {
         const parentKey = this.getParentKey(item.key, treeNodes);
         return parentKey;
@@ -182,11 +188,40 @@ export default class MultipleChoiceBox extends Vue {
     this.isOpen = false;
   }
 
-  @Emit('check')
-  handleTreeNodeCheck(checkedKeys: string[] | number[] | undefined = []) {
+  // 关闭tag
+  onTagClose(removeKey: string | number) {
+    const parentKey = this.getParentKey(removeKey, this.treeData);
+    const removeKeys: any[] = [removeKey];
+    if (parentKey) {
+      removeKeys.push(parentKey);
+    }
+    this.checkedKeys = [...this.checkedKeys.filter((key) => !removeKeys.includes(key))];
     debugger;
-    this.checkedKeys = checkedKeys;
-    return checkedKeys || [];
+  }
+
+  mounted() {
+    const treeNodes = [...this.treeData];
+    const { dataList, allLeaves } = this.generateList(treeNodes);
+
+    Object.assign(this, {
+      allLeaves,
+      treeNodeList: dataList,
+      checkedKeys: this.value,
+      expandedKeys: this.value,
+      autoExpandParent: true,
+    });
+  }
+
+  @Emit('check')
+  handleTreeNodeCheck() {
+    return this.checkedKeys;
+  }
+
+  @Watch('checkedKeys')
+  handleCheckedKeysChange(newVal: any, oldVal: any) {
+    if (newVal !== oldVal) {
+      this.handleTreeNodeCheck();
+    }
   }
 }
 </script>
