@@ -9,6 +9,8 @@
 </template>
 
 <style lang="less">
+@import 'styles/colorui/main.css';
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
