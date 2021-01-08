@@ -20,18 +20,21 @@
           </template>
 
           <!--树形展示-->
-          <a-tree :expanded-keys="expandedKeys"
+          <a-tree checkable
+                  :expanded-keys="expandedKeys"
                   :auto-expand-parent="autoExpandParent"
                   :tree-data="treeData"
                   v-bind="$attrs"
+                  :checkedKeys="value"
+                  @check="handleTreeNodeCheck"
                   @expand="onExpand">
             <template slot="title" slot-scope="{ title }">
-        <span v-if="title.includes(searchValue)">
-          {{ title.substr(0, title.indexOf(searchValue)) }}
-          <span style="color: #f50">{{ searchValue }}</span>
-          {{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
-        </span>
-              <span v-else>{{ title }}</span>
+              <div v-if="title.includes(searchValue)" class="flex">
+                {{ title.substr(0, title.indexOf(searchValue)) }}
+                <div style="color: #f50">{{ searchValue }}</div>
+                {{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
+              </div>
+              <div v-else>{{ title }}</div>
             </template>
           </a-tree>
         </a-card>
@@ -53,21 +56,22 @@
 
 <script lang="ts">
 
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import {
+  Component, Emit, Model, Prop, Vue,
+} from 'vue-property-decorator';
 
-export interface ReplaceFields {
-  children: string;
+export interface TreeNode {
+  children: TreeNode[];
   title: string;
   key: string;
 }
 
 @Component({ name: 'MultipleChoiceBox' })
 export default class MultipleChoiceBox extends Vue {
-  /* 替换 treeNode 中 title,key,children 字段为 treeData 中对应的字段 */
-  // @Prop({
-  //   type: Object,
-  //   default: () => ({children: 'children', title: 'title', key: 'key'}),
-  // }) replaceFields: ReplaceFields | undefined;
+  @Model('check', { type: Array, default: () => ([]) }) value: string[] | number[] | undefined;
+
+  checkedKeys: any[] = this.value || [];
+
   isOpen = false;
 
   expandedKeys = [];
@@ -76,24 +80,36 @@ export default class MultipleChoiceBox extends Vue {
 
   autoExpandParent = true;
 
-  treeData = [
+  // 所有的叶子结点
+  allLeaves: any[] = [];
+
+  treeData: any[] = [
     {
-      name: 'parent 1',
+      title: 'parent 1',
       key: '0-0',
-      child: [
+      scopedSlots: { title: 'title' },
+      children: [
         {
-          name: '张晨成',
+          title: '张晨成',
           key: '0-0-0',
           disabled: true,
-          child: [
-            { name: 'leaf', key: '0-0-0-0', disableCheckbox: true },
-            { name: 'leaf', key: '0-0-0-1' },
+          children: [
+            { title: 'leaf', key: '0-0-0-0', disableCheckbox: true },
+            { title: 'leaf', key: '0-0-0-1' },
           ],
+          scopedSlots: { title: 'title' },
         },
         {
-          name: 'parent 1-1',
+          title: 'parent 1-1',
           key: '0-0-1',
-          child: [{ key: '0-0-1-0', name: 'zcvc' }],
+          children: [{ key: '0-0-1-0', title: 'zcvc' }],
+          scopedSlots: { title: 'title' },
+        },
+        {
+          title: 'parent 1-2',
+          key: '0-0-2',
+          children: [{ key: '0-0-2-0', title: 'zcvc111' }],
+          scopedSlots: { title: 'title' },
         },
       ],
     },
@@ -105,10 +121,55 @@ export default class MultipleChoiceBox extends Vue {
     this.autoExpandParent = false;
   }
 
+  // 将treeNodes转化成Array和获得所有子节点
+  generateList(treeNodes: TreeNode[], dataList: { key: string; title: string }[] = [],
+    allLeaves: { key: string; title: string }[] = []) {
+    treeNodes.forEach(({ key, children, title }) => {
+      dataList.push({ key, title });
+      if (children) {
+        this.generateList(children, dataList, allLeaves);
+      } else {
+        allLeaves.push({ key, title });
+      }
+    });
+
+    return { dataList, allLeaves };
+  }
+
+  // 获取parentKey
+  getParentKey(key: string, treeNodes: TreeNode[]) {
+    let parentKey;
+    treeNodes.forEach((node) => {
+      if (node.children) {
+        if (node.children.some((item) => item.key === key)) {
+          parentKey = node.key;
+        } else if (this.getParentKey(key, node.children)) {
+          parentKey = this.getParentKey(key, node.children);
+        }
+      }
+    });
+
+    return parentKey;
+  }
+
   // 关键字搜索
   onSearch({ target: { value } }: any) {
-    debugger;
-    this.searchValue = value;
+    const treeNodes = [...this.treeData];
+    const { dataList, allLeaves } = this.generateList(treeNodes);
+    this.allLeaves = allLeaves;
+    const expandedKeys = dataList.map((item) => {
+      if (item.title?.includes(value)) {
+        const parentKey = this.getParentKey(item.key, treeNodes);
+        return parentKey;
+      }
+      return null;
+    }).filter((item, i, self) => item && self.indexOf(item) === i);
+
+    Object.assign(this, {
+      expandedKeys,
+      searchValue: value,
+      autoExpandParent: true,
+    });
   }
 
   // 关闭事件
@@ -119,6 +180,13 @@ export default class MultipleChoiceBox extends Vue {
   // 确定
   onBtnOk() {
     this.isOpen = false;
+  }
+
+  @Emit('check')
+  handleTreeNodeCheck(checkedKeys: string[] | number[] | undefined = []) {
+    debugger;
+    this.checkedKeys = checkedKeys;
+    return checkedKeys || [];
   }
 }
 </script>
