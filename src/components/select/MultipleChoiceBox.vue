@@ -161,6 +161,17 @@ export default class MultipleChoiceBox extends Vue {
     return parentKey;
   }
 
+  getAllParentKeys(key: string | number, treeNodes: TreeNode[] = [], allParents: string[] = []) {
+    // eslint-disable-next-line no-param-reassign
+    treeNodes = treeNodes || this.treeData;
+    const parentKey = this.getParentKey(key, treeNodes);
+    if (parentKey) {
+      allParents.push(parentKey);
+      this.getAllParentKeys(parentKey, treeNodes);
+    }
+    return allParents;
+  }
+
   // 关键字搜索
   onSearch({ target: { value } }: any, treeNodes = this.treeData || []) {
     const expandedKeys = this.treeNodeList?.map((item) => {
@@ -190,13 +201,9 @@ export default class MultipleChoiceBox extends Vue {
 
   // 关闭tag
   onTagClose(removeKey: string | number) {
-    const parentKey = this.getParentKey(removeKey, this.treeData);
-    const removeKeys: any[] = [removeKey];
-    if (parentKey) {
-      removeKeys.push(parentKey);
-    }
+    const removeKeys: any[] = this.getAllParentKeys(removeKey, this.treeData);
+    removeKeys.push(removeKey);
     this.checkedKeys = [...this.checkedKeys.filter((key) => !removeKeys.includes(key))];
-    debugger;
   }
 
   mounted() {
