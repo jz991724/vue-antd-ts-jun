@@ -18,42 +18,49 @@
     <a-card slot="dropdownRender"
             :bodyStyle="{padding:'10px'}">
       <div class="flex">
-        <a-card :body-style="{width:'300px',maxHeight:'400px',overflow:'auto'}" size="small">
-          <!--搜索-->
-          <template slot="title">
-            <a-input-search style="width: 100%" placeholder="请输入关键字" @change="onSearch"/>
+        <a-card :body-style="{width:'300px',maxHeight:'400px',overflow:'auto'}"
+                size="small">
+          <template v-if="treeData.length>0">
+            <!--搜索-->
+            <template slot="title">
+              <a-input-search style="width: 100%" placeholder="请输入关键字" @change="onSearch"/>
+            </template>
+
+            <!--树形展示-->
+            <a-tree checkable
+                    :expanded-keys="expandedKeys"
+                    :auto-expand-parent="autoExpandParent"
+                    :tree-data="treeData"
+                    v-bind="$attrs"
+                    :checkedKeys="checkedKeys"
+                    @check="onCheckTreeNode"
+                    @expand="onExpand">
+              <template slot="title" slot-scope="{ title }">
+                <div v-if="title.includes(searchValue)" class="flex">
+                  {{ title.substr(0, title.indexOf(searchValue)) }}
+                  <div style="color: #f50">{{ searchValue }}</div>
+                  {{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
+                </div>
+                <div v-else>{{ title }}</div>
+              </template>
+            </a-tree>
           </template>
 
-          <!--树形展示-->
-          <a-tree checkable
-                  :expanded-keys="expandedKeys"
-                  :auto-expand-parent="autoExpandParent"
-                  :tree-data="treeData"
-                  v-bind="$attrs"
-                  :checkedKeys="checkedKeys"
-                  @check="onCheckTreeNode"
-                  @expand="onExpand">
-            <template slot="title" slot-scope="{ title }">
-              <div v-if="title.includes(searchValue)" class="flex">
-                {{ title.substr(0, title.indexOf(searchValue)) }}
-                <div style="color: #f50">{{ searchValue }}</div>
-                {{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
-              </div>
-              <div v-else>{{ title }}</div>
-            </template>
-          </a-tree>
+          <a-empty description="暂无数据" v-else/>
         </a-card>
 
         <a-divider type="vertical" style="height:200px;margin:auto 10px;"/>
 
         <a-card :body-style="{width:'300px',maxHeight:'400px',overflow:'auto'}" size="small">
-          <div style="width:100%;">
+          <div v-if="checkedKeys.length>0&&treeData.length>0" class="response">
             <template v-for="{title,key} in getAllTags">
               <a-tag closable @close="onTagClose(key)" :key="key" style="margin:5px;">
                 {{ title || '' }}
               </a-tag>
             </template>
           </div>
+
+          <a-empty description="暂无数据" v-else/>
         </a-card>
       </div>
 
