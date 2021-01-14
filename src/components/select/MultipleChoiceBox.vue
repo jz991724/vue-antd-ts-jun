@@ -6,9 +6,10 @@
 <template>
   <a-select :dropdownMatchSelectWidth="false"
             :open="isOpen"
-            @focus="isOpen = true"
+            ref="dropdownInput"
+            @focus="onFocusDropdownInput"
             class="dropdownInput"
-            style="width: 120px">
+            style="width: 200px">
     <template slot="placeholder">
       <div class="text-cut">{{ getCheckedNodeNames }}</div>
     </template>
@@ -17,7 +18,7 @@
     <a-card slot="dropdownRender"
             :bodyStyle="{padding:'10px'}">
       <div class="flex">
-        <a-card :body-style="{width:'200px',maxHeight:'400px',overflow:'auto'}" size="small">
+        <a-card :body-style="{width:'300px',maxHeight:'400px',overflow:'auto'}" size="small">
           <!--搜索-->
           <template slot="title">
             <a-input-search style="width: 100%" placeholder="请输入关键字" @change="onSearch"/>
@@ -45,7 +46,7 @@
 
         <a-divider type="vertical" style="height:200px;margin:auto 10px;"/>
 
-        <a-card :body-style="{width:'200px',maxHeight:'400px',overflow:'auto'}" size="small">
+        <a-card :body-style="{width:'300px',maxHeight:'400px',overflow:'auto'}" size="small">
           <div style="width:100%;">
             <template v-for="{title,key} in getAllTags">
               <a-tag closable @close="onTagClose(key)" :key="key" style="margin:5px;">
@@ -157,6 +158,15 @@ export default class MultipleChoiceBox extends Vue {
   get getAllTags() {
     const checkedKeys = this.checkedKeys || [];
     return this.allLeaves?.filter(({ key }) => checkedKeys.includes(key));
+  }
+
+  onFocusDropdownInput() {
+    // const { dropdownInput } = this.$refs;
+    // if (dropdownInput) {
+    //   (dropdownInput as any).blur();
+    // }
+
+    this.isOpen = true;
   }
 
   // 展开事件
