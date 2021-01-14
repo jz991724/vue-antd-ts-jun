@@ -79,6 +79,9 @@ export interface TreeNode {
 
 @Component({ name: 'MultipleChoiceBox' })
 export default class MultipleChoiceBox extends Vue {
+  // 树形备选树
+  @Prop({ type: Array, default: () => ([]) }) treeData: TreeNode[] | undefined;
+
   @Model('check', { type: Array, default: () => ([]) }) value: string[] | number[] | undefined;
 
   checkedKeys: any[] = [];
@@ -95,56 +98,6 @@ export default class MultipleChoiceBox extends Vue {
   allLeaves: { key: string; title: string }[] = [];
 
   treeNodeList: { key: string; title: string }[] = [];
-
-  treeData: any[] = [
-    {
-      title: '四大天王',
-      key: 'root',
-      scopedSlots: { title: 'title' },
-      children: [
-        {
-          title: '张学友',
-          key: '张学友',
-          children: [
-            { key: '张学友-01', title: '张学友1' },
-            {
-              key: '张学友-02',
-              title: '张学友2',
-              children: [
-                {
-                  key: '张学友-02-01',
-                  title: '张学友2-01',
-                },
-              ],
-            }],
-          scopedSlots: { title: 'title' },
-        },
-        {
-          title: '黎明',
-          key: '黎明',
-          children: [
-            { title: '黎明1', key: '黎明-01' },
-            { title: '黎明2', key: '黎明-02' },
-          ],
-          scopedSlots: { title: 'title' },
-        },
-        {
-          title: '刘德华',
-          key: '刘德华',
-          children: [{ key: '刘德华-01', title: '刘德华1' }],
-          scopedSlots: { title: 'title' },
-        },
-        {
-          title: '郭富城',
-          key: '郭富城',
-          children: [
-            { key: '郭富城-01', title: '郭富城1' },
-            { key: '郭富城-02', title: '郭富城2' }],
-          scopedSlots: { title: 'title' },
-        },
-      ],
-    },
-  ];
 
   // 最后提交的结果
   result: string[] | number[] | undefined = [];
