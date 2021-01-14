@@ -15,7 +15,7 @@ import MultipleChoiceBox from '@/components/select/MultipleChoiceBox.vue';
   components: { MultipleChoiceBox },
 })
 export default class Main extends Vue {
-test=[];
+test=['黎明-01', '黎明-02'];
 }
 </script>
 

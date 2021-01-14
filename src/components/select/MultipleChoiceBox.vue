@@ -9,11 +9,15 @@
             @focus="isOpen = true"
             class="dropdownInput"
             style="width: 120px">
+    <template slot="placeholder">
+      <div class="text-cut">{{ getCheckedNodeNames }}</div>
+    </template>
+
     <a-icon slot="suffixIcon" :type="isOpen? 'up':'down'"></a-icon>
     <a-card slot="dropdownRender"
             :bodyStyle="{padding:'10px'}">
       <div class="flex">
-        <a-card :body-style="{width:'200px'}" size="small">
+        <a-card :body-style="{width:'200px',maxHeight:'400px',overflow:'auto'}" size="small">
           <!--搜索-->
           <template slot="title">
             <a-input-search style="width: 100%" placeholder="请输入关键字" @change="onSearch"/>
@@ -25,7 +29,8 @@
                   :auto-expand-parent="autoExpandParent"
                   :tree-data="treeData"
                   v-bind="$attrs"
-                  v-model="checkedKeys"
+                  :checkedKeys="checkedKeys"
+                  @check="onCheckTreeNode"
                   @expand="onExpand">
             <template slot="title" slot-scope="{ title }">
               <div v-if="title.includes(searchValue)" class="flex">
@@ -40,12 +45,14 @@
 
         <a-divider type="vertical" style="height:200px;margin:auto 10px;"/>
 
-        <a-card :body-style="{width:'200px'}" size="small">
-          <template v-for="({title,key},index) in getAllTags">
-            <a-tag closable @close="onTagClose(key)" :key="index">
-              {{ title || '' }}
-            </a-tag>
-          </template>
+        <a-card :body-style="{width:'200px',maxHeight:'400px',overflow:'auto'}" size="small">
+          <div style="width:100%;">
+            <template v-for="{title,key} in getAllTags">
+              <a-tag closable @close="onTagClose(key)" :key="key" style="margin:5px;">
+                {{ title || '' }}
+              </a-tag>
+            </template>
+          </div>
         </a-card>
       </div>
 
@@ -90,38 +97,66 @@ export default class MultipleChoiceBox extends Vue {
 
   treeData: any[] = [
     {
-      title: 'parent 1',
-      key: '0-0',
+      title: '四大天王',
+      key: 'root',
       scopedSlots: { title: 'title' },
       children: [
         {
-          title: '张晨成',
-          key: '0-0-0',
+          title: '张学友',
+          key: '张学友',
           children: [
-            { title: 'leaf', key: '0-0-0-0' },
-            { title: 'leaf', key: '0-0-0-1' },
+            { key: '张学友-01', title: '张学友1' },
+            {
+              key: '张学友-02',
+              title: '张学友2',
+              children: [
+                {
+                  key: '张学友-02-01',
+                  title: '张学友2-01',
+                },
+              ],
+            }],
+          scopedSlots: { title: 'title' },
+        },
+        {
+          title: '黎明',
+          key: '黎明',
+          children: [
+            { title: '黎明1', key: '黎明-01' },
+            { title: '黎明2', key: '黎明-02' },
           ],
           scopedSlots: { title: 'title' },
         },
         {
-          title: 'parent 1-1',
-          key: '0-0-1',
-          children: [{ key: '0-0-1-0', title: 'zcvc' }],
+          title: '刘德华',
+          key: '刘德华',
+          children: [{ key: '刘德华-01', title: '刘德华1' }],
           scopedSlots: { title: 'title' },
         },
         {
-          title: 'parent 1-2',
-          key: '0-0-2',
-          children: [{ key: '0-0-2-0', title: 'zcvc111' }, { key: '0-0-2-1', title: 'zcvc221' }],
+          title: '郭富城',
+          key: '郭富城',
+          children: [
+            { key: '郭富城-01', title: '郭富城1' },
+            { key: '郭富城-02', title: '郭富城2' }],
           scopedSlots: { title: 'title' },
         },
       ],
     },
   ];
 
+  // 最后提交的结果
+  result: string[] | number[] | undefined = [];
+
+  get getCheckedNodeNames() {
+    const { allLeaves } = this;
+    const { result } = this;
+    return allLeaves.filter(({ key, title }) => result?.includes(key)).map((node) => node.title).join(',');
+  }
+
   get getAllTags() {
     const checkedKeys = this.checkedKeys || [];
-    return this.allLeaves.filter(({ key }) => checkedKeys.includes(key));
+    return this.allLeaves?.filter(({ key }) => checkedKeys.includes(key));
   }
 
   // 展开事件
@@ -161,17 +196,6 @@ export default class MultipleChoiceBox extends Vue {
     return parentKey;
   }
 
-  getAllParentKeys(key: string | number, treeNodes: TreeNode[] = [], allParents: string[] = []) {
-    // eslint-disable-next-line no-param-reassign
-    treeNodes = treeNodes || this.treeData;
-    const parentKey = this.getParentKey(key, treeNodes);
-    if (parentKey) {
-      allParents.push(parentKey);
-      this.getAllParentKeys(parentKey, treeNodes);
-    }
-    return allParents;
-  }
-
   // 关键字搜索
   onSearch({ target: { value } }: any, treeNodes = this.treeData || []) {
     const expandedKeys = this.treeNodeList?.map((item) => {
@@ -189,6 +213,12 @@ export default class MultipleChoiceBox extends Vue {
     });
   }
 
+  // 选择树节点
+  onCheckTreeNode(checkedKeys = []) {
+    // eslint-disable-next-line max-len
+    this.checkedKeys = [...this.allLeaves].map((item) => item.key).filter((key) => key && checkedKeys.includes(key));
+  }
+
   // 关闭事件
   onBtnClose() {
     this.isOpen = false;
@@ -196,17 +226,18 @@ export default class MultipleChoiceBox extends Vue {
 
   // 确定
   onBtnOk() {
+    this.result = [...this.checkedKeys];
+    this.handleTreeNodeCheck(this.result);
     this.isOpen = false;
   }
 
   // 关闭tag
   onTagClose(removeKey: string | number) {
-    const removeKeys: any[] = this.getAllParentKeys(removeKey, this.treeData);
-    removeKeys.push(removeKey);
-    this.checkedKeys = [...this.checkedKeys.filter((key) => !removeKeys.includes(key))];
+    this.checkedKeys = this.checkedKeys.filter((key) => key !== removeKey);
   }
 
-  mounted() {
+  // 初始化
+  init() {
     const treeNodes = [...this.treeData];
     const { dataList, allLeaves } = this.generateList(treeNodes);
 
@@ -215,19 +246,27 @@ export default class MultipleChoiceBox extends Vue {
       treeNodeList: dataList,
       checkedKeys: this.value,
       expandedKeys: this.value,
+      result: this.value,
       autoExpandParent: true,
     });
   }
 
-  @Emit('check')
-  handleTreeNodeCheck() {
-    return this.checkedKeys;
+  mounted() {
+    this.init();
   }
 
-  @Watch('checkedKeys')
-  handleCheckedKeysChange(newVal: any, oldVal: any) {
-    if (newVal !== oldVal) {
-      this.handleTreeNodeCheck();
+  @Emit('check')
+  // eslint-disable-next-line class-methods-use-this
+  handleTreeNodeCheck(value: string[] | number[] | undefined) {
+    return value;
+  }
+
+  @Watch('isOpen', { immediate: true })
+  handleIsOpenChange(newVal: boolean, oldVal: boolean) {
+    if (newVal !== oldVal && newVal) {
+      // 重新初始化
+      // Object.assign(this.$data, this.$options.data());
+      this.init();
     }
   }
 }
