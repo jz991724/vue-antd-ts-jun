@@ -36,9 +36,9 @@
                     @check="onCheckTreeNode"
                     @expand="onExpand">
               <template slot="title" slot-scope="{ title }">
-                <div v-if="title.includes(searchValue)" class="flex">
+                <div v-if="searchValue&&title.indexOf(searchValue)>-1" class="flex">
                   {{ title.substr(0, title.indexOf(searchValue)) }}
-                  <div style="color: #f50">{{ searchValue }}</div>
+                  <div class="text-red">{{ searchValue }}</div>
                   {{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
                 </div>
                 <div v-else>{{ title }}</div>
@@ -82,6 +82,7 @@ export interface TreeNode {
   children: TreeNode[];
   title: string;
   key: string;
+  scopedSlots?: Record<string, any>;
 }
 
 @Component({ name: 'MultipleChoiceBox' })
@@ -101,9 +102,10 @@ export default class MultipleChoiceBox extends Vue {
 
   autoExpandParent = true;
 
-  // 所有的叶子结点
+  // 所有的叶子节点
   allLeaves: { key: string; title: string }[] = [];
 
+  // 所有节点的数组，不是树形结构
   treeNodeList: { key: string; title: string }[] = [];
 
   // 最后提交的结果
@@ -138,13 +140,18 @@ export default class MultipleChoiceBox extends Vue {
   // 将treeNodes转化成Array和获得所有子节点
   generateList(treeNodes: TreeNode[], dataList: { key: string; title: string }[] = [],
     allLeaves: { key: string; title: string }[] = []) {
-    treeNodes.forEach(({ key, children, title }) => {
+    treeNodes.forEach((node: TreeNode) => {
+      const { key, children, title } = node;
       dataList.push({ key, title });
       if (children) {
         this.generateList(children, dataList, allLeaves);
       } else {
         allLeaves.push({ key, title });
       }
+
+      // 用于搜索
+      // eslint-disable-next-line no-param-reassign
+      node.scopedSlots = { title: 'title' };
     });
 
     return { dataList, allLeaves };
@@ -169,7 +176,7 @@ export default class MultipleChoiceBox extends Vue {
   // 关键字搜索
   onSearch({ target: { value } }: any, treeNodes = this.treeData || []) {
     const expandedKeys = this.treeNodeList?.map((item) => {
-      if (item.title?.includes(value)) {
+      if (item.title?.indexOf(value) > -1) {
         const parentKey = this.getParentKey(item.key, treeNodes);
         return parentKey;
       }

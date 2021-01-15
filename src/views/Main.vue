@@ -21,7 +21,6 @@ export default class Main extends Vue {
     {
       title: '四大天王',
       key: 'root',
-      scopedSlots: { title: 'title' },
       children: [
         {
           title: '张学友',
@@ -38,7 +37,6 @@ export default class Main extends Vue {
                 },
               ],
             }],
-          scopedSlots: { title: 'title' },
         },
         {
           title: '黎明',
@@ -47,13 +45,12 @@ export default class Main extends Vue {
             { title: '黎明1', key: '黎明-01' },
             { title: '黎明2', key: '黎明-02' },
           ],
-          scopedSlots: { title: 'title' },
+          // scopedSlots: { title: 'title' },
         },
         {
           title: '刘德华',
           key: '刘德华',
           children: [{ key: '刘德华-01', title: '刘德华1' }],
-          scopedSlots: { title: 'title' },
         },
         {
           title: '郭富城',
@@ -61,7 +58,6 @@ export default class Main extends Vue {
           children: [
             { key: '郭富城-01', title: '郭富城1' },
             { key: '郭富城-02', title: '郭富城2' }],
-          scopedSlots: { title: 'title' },
         },
       ],
     },
