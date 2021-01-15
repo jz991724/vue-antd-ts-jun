@@ -11,7 +11,7 @@
             :class="{'dropdownInput':true,'borderless-select':!bordered}"
             style="min-width: 150px">
     <template slot="placeholder">
-      <div class="text-cut">{{ getCheckedNodeNames }}</div>
+      <div class="text-cut" :class="{'text-black-65':!bordered}">{{ getCheckedNodeNames }}</div>
     </template>
 
     <a-icon slot="suffixIcon" :type="loading?'loading': (isOpen? 'up':'down')"></a-icon>
@@ -233,10 +233,6 @@ export default class MultipleChoiceBox extends Vue {
     });
   }
 
-  mounted() {
-    this.init();
-  }
-
   @Emit('check')
   // eslint-disable-next-line class-methods-use-this
   handleTreeNodeCheck(value: string[] | number[] | undefined) {
@@ -248,6 +244,18 @@ export default class MultipleChoiceBox extends Vue {
     if (newVal !== oldVal && newVal) {
       // 重新初始化
       // Object.assign(this.$data, this.$options.data());
+
+      Object.assign(this, {
+        checkedKeys: this.value,
+        expandedKeys: this.value,
+        autoExpandParent: true,
+      });
+    }
+  }
+
+  @Watch('treeData', { deep: true, immediate: true })
+  handleTreeChange(newVal: TreeNode[], oldVal: any) {
+    if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
       this.init();
     }
   }
