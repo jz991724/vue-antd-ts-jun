@@ -11,7 +11,27 @@
             :class="{'dropdownInput':true,'borderless-select':!bordered}"
             style="min-width: 150px">
     <template slot="placeholder">
-      <div class="text-cut" :class="{'text-black-65':!bordered}">{{ getCheckedNodeNames }}</div>
+      <template v-if="checkedKeys.length>0">
+        <div class="flex" :class="{'text-black-65':!bordered}">
+          <div v-for="name,index in getCheckedNodeNames"
+               :key="index">
+            <div v-if="maxShowCount>index" class="flex">
+              <div :style="{maxWidth:`${maxSelectedOptionTextLength*20}px`}" class="text-cut">
+                {{ name }}
+              </div>
+              <div v-if="index+1<checkedKeys.length">
+                ,
+              </div>
+            </div>
+
+            <div v-else-if="index+1===checkedKeys.length">
+              +{{ checkedKeys.length - maxShowCount }}
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template v-else>{{ placeholder || '请选择' }}</template>
     </template>
 
     <a-icon slot="suffixIcon" :type="loading?'loading': (isOpen? 'up':'down')"></a-icon>
@@ -55,7 +75,7 @@
         <a-card :body-style="{width:'300px',maxHeight:'400px',overflow:'auto'}" size="small">
           <div v-if="checkedKeys.length>0&&treeData.length>0" class="response">
             <template v-for="{title,key} in getAllTags">
-              <a-tag closable @close="onTagClose(key)" :key="key" style="margin:5px;">
+              <a-tag closable @close="onTagClose(key)" :key="key" class="text-cut" style="margin:5px;">
                 {{ title || '' }}
               </a-tag>
             </template>
@@ -93,9 +113,20 @@ export default class MultipleChoiceBox extends Vue {
 
   @Model('check', { type: Array, default: () => ([]) }) value: string[] | number[] | undefined;
 
+  // 是否需要border
   @Prop({ type: Boolean, default: true }) bordered: boolean | undefined;
 
+  // 是否正在加载treeData
   @Prop({ type: Boolean, default: false }) loading: boolean | undefined;
+
+  // placeholder
+  @Prop({ type: String, default: '请选择' }) placeholder: string;
+
+  // 最多显示的"选中项"数量
+  @Prop({ type: Number, default: 2 }) maxShowCount: number;
+
+  // 最大显示的"选中项"文本长度
+  @Prop({ type: Number, default: 5 }) maxSelectedOptionTextLength: number;
 
   checkedKeys: any[] = [];
 
@@ -117,9 +148,8 @@ export default class MultipleChoiceBox extends Vue {
   result: string[] | number[] | undefined = [];
 
   get getCheckedNodeNames() {
-    const { allLeaves } = this;
-    const { result } = this;
-    return allLeaves.filter(({ key, title }) => result?.includes(key)).map((node) => node.title).join(',');
+    const { allLeaves, result } = this;
+    return allLeaves.filter(({ key, title }) => result?.includes(key)).map((node) => node.title);
   }
 
   get getAllTags() {
