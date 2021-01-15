@@ -249,6 +249,13 @@ export default class MultipleChoiceBox extends Vue {
       this.init();
     }
   }
+
+  @Watch('value', { deep: true, immediate: true })
+  handleValueChange(newVal: any[], oldVal: any[]) {
+    if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+      this.result = newVal;
+    }
+  }
 }
 </script>
 

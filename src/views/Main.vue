@@ -1,6 +1,8 @@
 <template>
   <a-card>
-    <multiple-choice-box v-model="test" :tree-data="treeData"></multiple-choice-box>
+    <multiple-choice-box placeholder="请选择"
+                         v-model="test"
+                         :tree-data="treeData"></multiple-choice-box>
     <pre>{{ test }}</pre>
   </a-card>
 </template>
