@@ -152,6 +152,7 @@ export default class MultipleChoiceBox extends Vue {
   result: string[] | number[] | undefined = [];
 
   get getCheckedNodeNames() {
+    debugger;
     const { allLeaves, result } = this;
     return allLeaves.filter(({ key, title }) => (result as any).includes(key))
       .map((node) => node.title);
