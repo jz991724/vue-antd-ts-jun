@@ -5,7 +5,7 @@
 */
 <template>
   <a-select :dropdownMatchSelectWidth="false"
-            :open="isOpen"
+            :open="isOpen&&!loading"
             ref="dropdownInput"
             @focus="onFocusDropdownInput"
             class="dropdownInput"
@@ -14,7 +14,8 @@
       <div class="text-cut">{{ getCheckedNodeNames }}</div>
     </template>
 
-    <a-icon slot="suffixIcon" :type="isOpen? 'up':'down'"></a-icon>
+    <a-icon slot="suffixIcon" :type="loading?'loading': (isOpen? 'up':'down')"></a-icon>
+
     <a-card slot="dropdownRender"
             :bodyStyle="{padding:'10px'}">
       <div class="flex">
@@ -91,6 +92,8 @@ export default class MultipleChoiceBox extends Vue {
   @Prop({ type: Array, default: () => ([]) }) treeData: TreeNode[] | undefined;
 
   @Model('check', { type: Array, default: () => ([]) }) value: string[] | number[] | undefined;
+
+  @Prop({ type: Boolean, default: false }) loading: boolean | undefined;
 
   checkedKeys: any[] = [];
 
