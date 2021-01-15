@@ -11,7 +11,7 @@
             :class="{'dropdownInput':true,'borderless-select':!bordered}"
             style="min-width: 150px">
     <template slot="placeholder">
-      <template v-if="result&&result.length>0">
+      <template v-if="getCheckedNodeNames.length>0">
         <div class="flex" :class="{'text-black-65':!bordered}">
           <div v-for="(name,index) in getCheckedNodeNames"
                :key="index">
@@ -19,13 +19,13 @@
               <div :style="{maxWidth:`${maxSelectedOptionTextLength*20}px`}" class="text-cut">
                 {{ name }}
               </div>
-              <div v-if="index+1<result.length">
+              <div v-if="index+1<getCheckedNodeNames.length">
                 ,
               </div>
             </div>
 
-            <div v-else-if="index+1===result.length">
-              +{{ result.length - maxShowCount }}
+            <div v-else-if="index+1===getCheckedNodeNames.length">
+              +{{ getCheckedNodeNames.length - maxShowCount }}
             </div>
           </div>
         </div>
