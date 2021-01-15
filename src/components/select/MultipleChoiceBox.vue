@@ -8,8 +8,8 @@
             :open="isOpen&&!loading"
             ref="dropdownInput"
             @focus="onFocusDropdownInput"
-            class="dropdownInput"
-            style="width: 200px">
+            :class="{'dropdownInput':true,'borderless-select':!bordered}"
+            style="min-width: 150px">
     <template slot="placeholder">
       <div class="text-cut">{{ getCheckedNodeNames }}</div>
     </template>
@@ -92,6 +92,8 @@ export default class MultipleChoiceBox extends Vue {
   @Prop({ type: Array, default: () => ([]) }) treeData: TreeNode[] | undefined;
 
   @Model('check', { type: Array, default: () => ([]) }) value: string[] | number[] | undefined;
+
+  @Prop({ type: Boolean, default: true }) bordered: boolean | undefined;
 
   @Prop({ type: Boolean, default: false }) loading: boolean | undefined;
 
@@ -251,7 +253,7 @@ export default class MultipleChoiceBox extends Vue {
   }
 
   @Watch('value', { deep: true, immediate: true })
-  handleValueChange(newVal: any[], oldVal: any[]) {
+  handleValueChange(newVal: string[] | number[] | undefined, oldVal: any) {
     if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
       this.result = newVal;
     }
@@ -259,6 +261,10 @@ export default class MultipleChoiceBox extends Vue {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+.borderless-select {
+  /deep/ .ant-select-selection {
+    border: 0;
+  }
+}
 </style>
