@@ -3,6 +3,7 @@
     <multiple-choice-box placeholder="请选择"
                          v-model="test"
                          :bordered="true"
+                         :required="true"
                          :tree-data="treeData"></multiple-choice-box>
     <pre>{{ test }}</pre>
   </a-card>

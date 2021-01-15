@@ -91,7 +91,12 @@
 
       <div slot="actions" class="justify-end flex">
         <a-button class="margin-right-xs" @click="onBtnClose()">取消</a-button>
-        <a-button type="primary" class="margin-right-xs" @click="onBtnOk()">确定</a-button>
+        <a-button type="primary"
+                  :disabled="required&&checkedKeys.length<1"
+                  class="margin-right-xs"
+                  @click="onBtnOk()">
+          确定
+        </a-button>
       </div>
     </a-card>
   </a-select>
@@ -131,6 +136,9 @@ export default class MultipleChoiceBox extends Vue {
 
   // 最大显示的"选中项"文本长度
   @Prop({ type: Number, default: 5 }) maxSelectedOptionTextLength: number | undefined;
+
+  // 是否必填
+  @Prop({ type: Boolean, default: false }) required: boolean | undefined;
 
   checkedKeys: any[] = [];
 
