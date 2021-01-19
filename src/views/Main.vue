@@ -1,11 +1,10 @@
 <template>
   <a-card>
     <multiple-choice-box placeholder="请选择"
-                         v-model="test"
+                         v-model="value"
                          :bordered="true"
                          :required="true"
                          :tree-data="treeData"></multiple-choice-box>
-    <pre>{{ test }}</pre>
   </a-card>
 </template>
 
@@ -19,7 +18,7 @@ import MultipleChoiceBox from '@/components/select/MultipleChoiceBox.vue';
   components: { MultipleChoiceBox },
 })
 export default class Main extends Vue {
-  test = ['黎明-01', '黎明-02'];
+  value = ['黎明-01', '黎明-02'];
 
   treeData: any[] = [
     {
