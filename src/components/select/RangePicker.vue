@@ -30,6 +30,7 @@ function moment(params?: any) {
   name: 'RangePicker',
 })
 export default class RangePicker extends Vue {
+  // 展示的日期格式
   @Prop({ type: String, default: 'YYYY-MM-DD HH:mm:ss' }) format: string | undefined;
 
   @Model('ok', {
@@ -39,11 +40,13 @@ export default class RangePicker extends Vue {
 
   dates = [];
 
+  // 点击确定按钮的回调
   @Emit('ok')
   handleOk() {
     return this.dates;
   }
 
+  // 日期范围发生变化的回调
   @Emit('change')
   handleChange(dates: any[]) {
     if (dates.length < 2) {
@@ -54,6 +57,7 @@ export default class RangePicker extends Vue {
     return this.dates;
   }
 
+  // 日期范围清空后的回调
   @Emit('clear')
   handleClear() {
     this.dates = [];

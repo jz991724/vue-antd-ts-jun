@@ -7,7 +7,7 @@
                            :required="true"
                            :tree-data="treeData"></multiple-choice-box>
 
-      <range-picker style="width:200px;" class="padding-lr-xs" v-model="date"></range-picker>
+      <range-picker style="width:200px;" v-model="dates"></range-picker>
     </div>
   </a-card>
 </template>
@@ -71,7 +71,7 @@ export default class Main extends Vue {
     },
   ];
 
-  date = ['2021-01-03T08:51:22.384Z', '2021-02-25T08:51:22.384Z'];
+  dates = ['2021-01-03T08:51:22.384Z', '2021-02-25T08:51:22.384Z'];
 }
 </script>
 
