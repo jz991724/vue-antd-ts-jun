@@ -86,24 +86,24 @@
       ];
     ```
     
-    - #### **RangePicker（***时间选择***）**
-        ### API
-        ##### Props
-        | 属性 | 说明 | 类型 | 默认值 |
-        | :----: | :---- | :---- | :---- |
-        | format | 展示的日期格式 | string | "YYYY-MM-DD HH:mm:ss" |
-        ##### Events
-        | 事件名称 | 说明 | 回调参数 |
-        | :----: | :---- | :---- |
-        | ok | 点击确定按钮的回调 | function(dates: [moment, moment] | [string, string]) |
-        | change | 日期范围发生变化的回调 | function(dates: [moment, moment] | [string, string], dateStrings: [string, string]) |
-        | clear | 日期范围清空后的回调 | - | - |
-      
-        ### 代码演示
-        ``` html
-        <range-picker style="width:200px;" v-model="dates"></range-picker>
-        ```
-        ``` javascript
-        dates = ['2021-01-03T08:51:22.384Z', '2021-02-25T08:51:22.384Z'];
-        ```
+  - #### **RangePicker（***时间选择***）**
+    ### API
+    ##### Props
+    | 属性 | 说明 | 类型 | 默认值 |
+    | :----: | :---- | :---- | :---- |
+    | format | 展示的日期格式 | string | "YYYY-MM-DD HH:mm:ss" |
+    ##### Events
+    | 事件名称 | 说明 | 回调参数 |
+    | :----: | :---- | :---- |
+    | ok | 点击确定按钮的回调 | function(dates: [moment, moment] | [string, string]) |
+    | change | 日期范围发生变化的回调 | function(dates: [moment, moment] | [string, string], dateStrings: [string, string]) |
+    | clear | 日期范围清空后的回调 | - | - |
+               
+    ### 代码演示
+    ``` html
+    <range-picker style="width:200px;" v-model="dates"></range-picker>
+    ```
+    ``` javascript
+    dates = ['2021-01-03T08:51:22.384Z', '2021-02-25T08:51:22.384Z'];
+    ```
    
