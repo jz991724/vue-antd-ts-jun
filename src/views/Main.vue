@@ -1,10 +1,14 @@
 <template>
   <a-card>
-    <multiple-choice-box placeholder="请选择"
-                         v-model="value"
-                         :bordered="true"
-                         :required="true"
-                         :tree-data="treeData"></multiple-choice-box>
+    <div class="flex">
+      <multiple-choice-box placeholder="请选择"
+                           v-model="value"
+                           :bordered="true"
+                           :required="true"
+                           :tree-data="treeData"></multiple-choice-box>
+
+      <range-picker style="width:200px;" class="padding-lr-xs" v-model="date"></range-picker>
+    </div>
   </a-card>
 </template>
 
@@ -12,10 +16,11 @@
 
 import { Component, Vue } from 'vue-property-decorator';
 import MultipleChoiceBox from '@/components/select/MultipleChoiceBox.vue';
+import RangePicker from '@/components/select/RangePicker.vue';
 
 @Component({
   name: 'Main',
-  components: { MultipleChoiceBox },
+  components: { RangePicker, MultipleChoiceBox },
 })
 export default class Main extends Vue {
   value = ['黎明-01', '黎明-02'];
@@ -65,6 +70,8 @@ export default class Main extends Vue {
       ],
     },
   ];
+
+  date = ['2021-01-03T08:51:22.384Z', '2021-02-25T08:51:22.384Z'];
 }
 </script>
 
