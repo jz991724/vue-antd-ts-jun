@@ -1,11 +1,11 @@
-#自定义组件库
+# 自定义组件库
 
-##下拉
+## 下拉
 
-- ###多选
-  - ####**MultipleChoiceBox（***下拉多选选择框***）**
-    ###API
-    #####Props
+- ### 多选
+  - #### **MultipleChoiceBox（***下拉多选选择框***）**
+    ### API
+    ##### Props
     | 属性 | 说明 | 类型 | 默认值 |
     | :----: | :---- | :---- | :---- |
     | treeData | 提供选择的数据源 | Array<{children,title,key,[scopedSlots]}> | [] |
@@ -16,11 +16,11 @@
     | maxShowCount | 最多显示的"选中项"数量 | number | 2 |
     | maxSelectedOptionTextLength | 最大显示的"选中项"文本长度 | number | 2 |
     | required | value不能为空，至少需要选择一项 | boolean | false |
-    #####Events
+    ##### Events
     | 事件名称 | 说明 | 回调参数 |
     | :----: | :---- | :---- |
     | check | 选中时调用，参数为选中项的value值 | function(value) |
-    #####Option props
+    ##### Option props
     | 属性 | 说明 | 类型 | 默认值 |
     | :----: | :---- | :---- | :---- |
     | title | 备选项显示的title | string | - |
@@ -28,7 +28,7 @@
     | children | 树形结构下，当前节点的子节点,叶子节点情况下可以为空 | Array<{children,title,key,[scopedSlots]}> | - |
     | scopedSlots | 使用treeData时，可以通过该属性配置支持slot的属性，如scopedSlots:{title:'xxx'} | object | - |
        
-    ###代码演示
+    ### 代码演示
     ```
     <multiple-choice-box placeholder="请选择"
                              v-model="value"
