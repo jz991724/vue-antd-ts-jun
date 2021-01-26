@@ -1,13 +1,13 @@
 <template>
   <a-card>
-    <div class="flex">
+    <div class="flex response justify-between">
+      <range-picker style="width:200px;" v-model="dates"></range-picker>
+
       <multiple-choice-box placeholder="请选择"
                            v-model="value"
                            :bordered="true"
                            :required="true"
                            :tree-data="treeData"></multiple-choice-box>
-
-      <range-picker style="width:200px;" v-model="dates"></range-picker>
     </div>
   </a-card>
 </template>
