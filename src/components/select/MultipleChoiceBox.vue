@@ -9,6 +9,7 @@
             ref="dropdownInput"
             @focus="onFocusDropdownInput"
             :class="{'dropdownInput':true,'borderless-select':!bordered}"
+            v-bind="$attrs"
             style="min-width: 150px">
     <template slot="placeholder">
       <template v-if="getCheckedNodeNames.length>0">
