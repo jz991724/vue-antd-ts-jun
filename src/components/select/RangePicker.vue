@@ -38,7 +38,7 @@ export default class RangePicker extends Vue {
     default: () => ([moment().startOf('day'), moment()]),
   }) value: any[] | undefined;
 
-  dates = [];
+  dates: any[] = [];
 
   // 点击确定按钮的回调
   @Emit('ok')
@@ -66,7 +66,7 @@ export default class RangePicker extends Vue {
   }
 
   @Watch('value', { immediate: true })
-  handleDatesChange(newVal, oldVal) {
+  handleDatesChange(newVal: any[], oldVal: any[]) {
     if (newVal !== oldVal) {
       this.dates = [...newVal];
     }
