@@ -1,15 +1,24 @@
 <template>
-  <a-card>
-    <div class="flex response justify-between">
-      <range-picker style="width:200px;" v-model="dates"></range-picker>
+  <div>
+    <a-card>
+      <div class="flex response justify-between">
+        <range-picker style="width:200px;" v-model="dates"></range-picker>
 
-      <multiple-choice-box placeholder="请选择"
-                           v-model="value"
-                           :bordered="true"
-                           :required="true"
-                           :tree-data="treeData"></multiple-choice-box>
-    </div>
-  </a-card>
+        <multiple-choice-box placeholder="请选择"
+                             v-model="value"
+                             :bordered="true"
+                             :required="true"
+                             :tree-data="treeData"></multiple-choice-box>
+      </div>
+    </a-card>
+
+    <!--tabs-->
+    <a-card>
+      <a-locale-provider :locale="locale">
+        <router-view :key="$route.fullPath"></router-view>
+      </a-locale-provider>
+    </a-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -17,6 +26,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import MultipleChoiceBox from '@/components/select/MultipleChoiceBox.vue';
 import RangePicker from '@/components/select/RangePicker.vue';
+import $ from 'jquery';
 
 @Component({
   name: 'Main',
