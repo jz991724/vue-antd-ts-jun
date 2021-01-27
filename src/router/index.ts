@@ -9,20 +9,20 @@ const routes: Array<RouteConfig> = [
     path: '/Main',
     name: 'Main',
     component: () => import('../views/Main.vue'),
-    children: [
-      {
-        path: 'tabs',
-        name: 'tabs',
-        component: () => import('../views/tabs/index.vue'),
-        children: [
-          {
-            path: 'tabsModal',
-            name: 'tabsModal',
-            component: () => import('../views/tabs/tabsModal_preview.vue'),
-          },
-        ],
-      },
-    ],
+    // children: [
+    //   {
+    //     path: 'tabs',
+    //     name: 'tabs',
+    //     component: () => import('../views/tabs/index.vue'),
+    //     children: [
+    //       {
+    //         path: 'tabsModal',
+    //         name: 'tabsModal',
+    //         component: () => import('../views/tabs/tabsModal_preview.vue'),
+    //       },
+    //     ],
+    //   },
+    // ],
   },
   {
     path: '/',

@@ -65,11 +65,6 @@ export default class TabsModalPreview extends Vue {
       (tabsModal as any).show();
     }
   }
-
-  mounted() {
-    debugger;
-    this.showModal();
-  }
 }
 </script>
 
