@@ -1,15 +1,26 @@
 <template>
-  <a-card>
-    <div class="flex response justify-between">
-      <range-picker style="width:200px;" v-model="dates"></range-picker>
+  <div>
+    <a-card>
+      <div class="flex response justify-between">
+        <range-picker style="width:200px;" v-model="dates"></range-picker>
 
-      <multiple-choice-box placeholder="请选择"
-                           v-model="value"
-                           :bordered="true"
-                           :required="true"
-                           :tree-data="treeData"></multiple-choice-box>
-    </div>
-  </a-card>
+        <multiple-choice-box placeholder="请选择"
+                             v-model="value"
+                             :bordered="true"
+                             :required="true"
+                             :tree-data="treeData"></multiple-choice-box>
+      </div>
+    </a-card>
+
+    <!--tabs-->
+    <a-card>
+      <!--      <a-locale-provider :locale="locale">-->
+      <!--        <router-view :key="$route.fullPath"></router-view>-->
+      <!--      </a-locale-provider>-->
+
+      <tabs-modal-preview></tabs-modal-preview>
+    </a-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -17,10 +28,12 @@
 import { Component, Vue } from 'vue-property-decorator';
 import MultipleChoiceBox from '@/components/select/MultipleChoiceBox.vue';
 import RangePicker from '@/components/select/RangePicker.vue';
+import $ from 'jquery';
+import TabsModalPreview from '@/views/tabs/tabsModal_preview.vue';
 
 @Component({
   name: 'Main',
-  components: { RangePicker, MultipleChoiceBox },
+  components: { TabsModalPreview, RangePicker, MultipleChoiceBox },
 })
 export default class Main extends Vue {
   value = ['黎明-01', '黎明-02'];
