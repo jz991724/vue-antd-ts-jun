@@ -61,16 +61,20 @@ export interface TabElement {
 
 @Component({ name: 'TabsModal' })
 export default class TabsModal extends Vue {
+  // 双向绑定的model
   @Model('change') selectedTab: any;
 
+  // 主题
   @Prop({ type: String, default: '' }) title: string | undefined;
 
+  // tabs
   @Prop({ type: Array, default: () => ([]) }) tabList: TabElement[] | undefined;
 
   visible = false;
 
   activeKey = '';
 
+  // 显示modal
   show() {
     this.visible = true;
     const [{ key }] = this.tabList || [];
@@ -78,12 +82,12 @@ export default class TabsModal extends Vue {
     this.handleActiveKeyChange();
   }
 
+  // 关闭回调
   cancel() {
-    this.$emit('myCancel');
-
     this.handleClose();
   }
 
+  // 调整tabPanel的样式
   getTabPanelStyle() {
     this.$nextTick(() => {
       const { title } = this.$refs;
@@ -108,6 +112,7 @@ export default class TabsModal extends Vue {
 
   @Emit('close')
   handleClose() {
+    // 初始化数据
     Object.assign(this.$data, (this.$options.data as any).call(this.$parent));
   }
 }
