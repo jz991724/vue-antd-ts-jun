@@ -29,6 +29,7 @@
     | scopedSlots | 使用treeData时，可以通过该属性配置支持slot的属性，如scopedSlots:{title:'xxx'} | object | - |
        
     ### 代码演示
+    ###### html
     ``` html
     <multiple-choice-box placeholder="请选择"
                              v-model="value"
@@ -36,6 +37,8 @@
                              :required="true"
                              :tree-data="treeData"></multiple-choice-box>
     ```
+    
+    ###### javascript
     ``` javascript
      value = ['黎明-01', '黎明-02'];
     
@@ -100,10 +103,95 @@
     | clear | 日期范围清空后的回调 | - | - |
                
     ### 代码演示
+    ###### html
     ``` html
     <range-picker style="width:200px;" v-model="dates"></range-picker>
     ```
+    
+    ###### javascript
     ``` javascript
     dates = ['2021-01-03T08:51:22.384Z', '2021-02-25T08:51:22.384Z'];
     ```
    
+   
+   
+  
+  
+## tabs切换
+
+- ### 弹出框
+  - #### **TabsModal（***tabs切换的modal***）**
+    ### API
+    ##### Props
+    | 属性 | 说明 | 类型 | 默认值 |
+    | :----: | :---- | :---- | :---- |
+    | title | 标题 | string|slot | - |
+    | selectedTab(v-model) | 当前激活 tab 面板的 key | string | 无 |
+    | tabList | 需要展示的所有的tab | Array<{tab:string,key:string}> | [] |
+    
+    ***注意***：tabPanel可以通过tab的key值，***slot="xxx"*** 自定义添加
+    
+    ##### Events
+    | 事件名称 | 说明 | 回调参数 |
+    | :----: | :---- | :---- |
+    | change | 切换面板的回调 | function(activeKey) {} |
+    | close | 关闭modal的回调 | function() |
+    ##### Tab props
+    | 属性 | 说明 | 类型 | 默认值 |
+    | :----: | :---- | :---- | :---- |
+    | title | tab标题 | string | - |
+    | key | tab的唯一值 | string | - |
+    
+    ### 代码演示
+    ###### html
+    ``` html
+     <tabs-modal ref="tabsModal"
+                    v-model="activeTabKey"
+                    :title="modelTitle"
+                    :tab-list="tabs">
+          <!--基本信息-->
+          <a-card slot="jbxx"
+                  :bordered="false"
+                  :bodyStyle="{padding:0}"
+                  :headStyle="{padding:0,border:0}">
+            <h1>基本信息：这个就是一个tab页的content</h1>
+          </a-card>
+    
+          <!--家庭信息-->
+          <a-card slot="jtxx"
+                  :bordered="false"
+                  :bodyStyle="{padding:0}"
+                  :headStyle="{padding:0,border:0}">
+            <h1>家庭信息：这个就是一个tab页的content</h1>
+          </a-card>
+    
+          <!--学历信息-->
+          <a-card slot="xlxx"
+                  :bordered="false"
+                  :bodyStyle="{padding:0}"
+                  :headStyle="{padding:0,border:0}">
+            <h1>学历信息：这个就是一个tab页的content</h1>
+          </a-card>
+        </tabs-modal>
+    ```
+    
+    ###### javascript
+    ``` javascript
+    tabs = [
+        { tab: '基本信息', key: 'jbxx' },
+        { tab: '家庭信息', key: 'jtxx' },
+        { tab: '学历信息', key: 'xlxx' },
+      ];
+    
+      activeTabKey = 'jtxx';
+    
+      modelTitle = '个人简历';
+    
+      showModal() {
+        const { tabsModal } = this.$refs;
+        if (tabsModal) {
+          (tabsModal as any).show();
+        }
+      }
+    ```
+    
