@@ -4,14 +4,8 @@
 * @创建时间: 2021-01-07 17:55:14
 */
 <template>
-  <a-select :dropdownMatchSelectWidth="false"
-            :open="isOpen&&!loading"
-            ref="dropdownInput"
-            @focus="onFocusDropdownInput"
-            :class="{'dropdownInput':true,'borderless-select':!bordered}"
-            v-bind="$attrs"
-            style="min-width: 150px">
-    <template slot="placeholder">
+  <a-popover trigger="click" v-bind="$attrs" :visible="isOpen&&!loading">
+    <a-button @click="isOpen=true" :loading="loading" :type="bordered?'default':'link'">
       <template v-if="getCheckedNodeNames.length>0">
         <div class="flex" :class="{'text-black-65':!bordered}">
           <div v-for="(name,index) in getCheckedNodeNames"
@@ -33,12 +27,11 @@
       </template>
 
       <template v-else>{{ placeholder || '请选择' }}</template>
-    </template>
 
-    <a-icon slot="suffixIcon" :type="loading?'loading': (isOpen? 'up':'down')"></a-icon>
+      <a-icon :type="isOpen? 'up':'down'" class="margin-left-xs"/>
+    </a-button>
 
-    <a-card slot="dropdownRender"
-            :bodyStyle="{padding:'10px'}">
+    <a-card slot="content" :bodyStyle="{padding:'10px'}">
       <div class="flex">
         <a-card :body-style="{width:'300px',maxHeight:'400px',overflow:'auto'}"
                 size="small">
@@ -100,7 +93,7 @@
         </a-button>
       </div>
     </a-card>
-  </a-select>
+  </a-popover>
 </template>
 
 <script lang="ts">
@@ -169,15 +162,6 @@ export default class MultipleChoiceBox extends Vue {
   get getAllTags() {
     const checkedKeys = this.checkedKeys || [];
     return this.allLeaves?.filter(({ key }) => checkedKeys.includes(key));
-  }
-
-  onFocusDropdownInput() {
-    // const { dropdownInput } = this.$refs;
-    // if (dropdownInput) {
-    //   (dropdownInput as any).blur();
-    // }
-
-    this.isOpen = true;
   }
 
   // 展开事件
