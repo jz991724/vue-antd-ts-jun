@@ -4,10 +4,10 @@
 * @创建时间: 2021-01-07 17:55:14
 */
 <template>
-  <a-popover trigger="click" v-bind="$attrs" :visible="isOpen&&!loading">
+  <a-popover trigger="click" v-bind="$attrs" :visible="isOpen&&!loading" arrow-point-at-center>
     <a-button @click="isOpen=true" :loading="loading" :type="bordered?'default':'link'">
       <template v-if="getCheckedNodeNames.length>0">
-        <div class="flex" :class="{'text-black-65':!bordered}">
+        <div class="flex" style="display: inline-flex;" :class="{'text-black-65':!bordered}">
           <div v-for="(name,index) in getCheckedNodeNames"
                :key="index">
             <div v-if="maxShowCount>index" class="flex">
