@@ -12,8 +12,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-// eslint-disable-next-line import/extensions
-import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN.js';
+import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 
 @Component({})
 export default class App extends Vue {
