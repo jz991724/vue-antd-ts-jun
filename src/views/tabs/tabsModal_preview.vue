@@ -50,7 +50,7 @@ import TabsModal from '@/components/tabs/tabsModal.vue';
 })
 export default class TabsModalPreview extends Vue {
   tabs = [
-    { tab: '基本信息', key: 'jbxx' },
+    { tab: '基本信息刷新CVS的方式是访问服务', key: 'jbxx' },
     { tab: '家庭信息', key: 'jtxx' },
     { tab: '学历信息', key: 'xlxx' },
   ];
