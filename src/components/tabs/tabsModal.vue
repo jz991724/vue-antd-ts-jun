@@ -32,11 +32,24 @@
             size="large">
       <a-tab-pane v-for="{tab,key},index in tabList" :key="key">
         <template slot="tab">
-          <div class="bg-img response padding-sm"
-               :style="{zIndex:activeKey===key?tabList.length+1:tabList.length-index}"
-               style="background-image: url('img/tabs/tabItem_bg.png');
-               height: 100%;position: absolute;">
-            {{ tab }}
+          <div :style="{zIndex:activeKey===key?tabList.length+1:tabList.length-index}"
+               style="position: relative;">
+            <div class="bg-img response"
+                 :style="{backgroundImage:
+                 `url('img/tabs/rectangle1${activeKey===key?'_blue':''}.png')`}"
+                 style="background-size: 100% 100%;height: 30px;">
+            </div>
+            <div class="bg-img response"
+                 :style="{backgroundImage:
+                 `url('img/tabs/rectangle2${activeKey===key?'_blue':''}.png')`}"
+                 style="padding: 0 15px 0 20px;background-size: 100% 100%;height: auto;">
+              {{ tab }}
+            </div>
+            <div class="bg-img response"
+                 :style="{backgroundImage:
+                 `url('img/tabs/rectangle3${activeKey===key?'_blue':''}.png')`}"
+                 style="background-size: 100% 100%;height: 60px;">
+            </div>
           </div>
         </template>
         <div class="padding-tb-xs padding-lr-xs" style="height:100%;overflow:auto;">
@@ -151,7 +164,8 @@ export default class TabsModal extends Vue {
         //background-repeat: no-repeat;
         padding: 0;
         width: 60px;
-        height: 160px;
+        min-height: 160px;
+        height: auto;
         border: 0;
         border-bottom: 0 !important;
         //padding: 20px 20px 70px;
@@ -174,7 +188,7 @@ export default class TabsModal extends Vue {
         padding-right: 0 !important;
 
         .bg-img {
-          background-image: url('/img/tabs/tabItem_active_bg.png') !important;
+          //background-image: url('/img/tabs/tabItem_active_bg.png') !important;
           color: #fff;
         }
       }
