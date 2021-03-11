@@ -164,7 +164,7 @@ export default class TabsModal extends Vue {
         //background-repeat: no-repeat;
         padding: 0;
         width: 60px;
-        min-height: 160px;
+        //min-height: 160px;
         height: auto;
         border: 0;
         border-bottom: 0 !important;
