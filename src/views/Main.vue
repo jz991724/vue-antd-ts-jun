@@ -2,7 +2,7 @@
   <div>
     <a-card>
       <div class="flex response justify-between">
-        <range-picker style="width:200px;" v-model="dates"></range-picker>
+        <range-picker style="width:400px;" v-model="dates"></range-picker>
 
         <multiple-choice-box placeholder="请选择"
                              v-model="value"

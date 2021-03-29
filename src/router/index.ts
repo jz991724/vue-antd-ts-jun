@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/Main',
+    path: '/',
     name: 'Main',
     component: () => import('../views/Main.vue'),
     // children: [
@@ -25,7 +25,7 @@ const routes: Array<RouteConfig> = [
     // ],
   },
   {
-    path: '/',
+    path: '/Home',
     name: 'Home',
     component: Home,
   },

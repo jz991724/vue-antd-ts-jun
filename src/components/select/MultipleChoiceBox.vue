@@ -4,8 +4,8 @@
 * @创建时间: 2021-01-07 17:55:14
 */
 <template>
-  <a-popover trigger="click" v-bind="$attrs" :visible="isOpen&&!loading" arrow-point-at-center>
-    <a-button @click="isOpen=true" :loading="loading" :type="bordered?'default':'link'">
+  <a-popover trigger="click" v-bind="$attrs" v-model="isOpen" :disabled="loading">
+    <a-button :type="bordered?'default':'link'">
       <template v-if="getCheckedNodeNames.length>0">
         <div class="flex" style="display: inline-flex;" :class="{'text-black-65':!bordered}">
           <div v-for="(name,index) in getCheckedNodeNames"
@@ -28,7 +28,7 @@
 
       <template v-else>{{ placeholder || '请选择' }}</template>
 
-      <a-icon :type="isOpen? 'up':'down'" class="margin-left-xs"/>
+      <a-icon :type="loading?'loading':(isOpen? 'up':'down')" class="margin-left-xs"/>
     </a-button>
 
     <a-card slot="content" :bodyStyle="{padding:'10px'}">
